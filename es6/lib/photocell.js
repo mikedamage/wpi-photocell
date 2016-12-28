@@ -1,4 +1,3 @@
-import _                           from 'lodash';
 import wpi, { INPUT, OUTPUT, LOW } from 'wiring-pi';
 import EventEmitter                from 'events';
 import NanoTimer                   from 'nanotimer';
