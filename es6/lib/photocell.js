@@ -4,10 +4,10 @@ import EventEmitter                from 'events';
 import NanoTimer                   from 'nanotimer';
 
 export class Photocell extends EventEmitter {
-  constructor(pin, options = {}) {
+  constructor(pin) {
     super();
-    this.pin = pin;
-    this.options = _.assign({}, Photocell.defaults, options);
+
+    this.pin   = pin;
     this.timer = new NanoTimer();
 
     wpi.setup('gpio');
@@ -15,39 +15,37 @@ export class Photocell extends EventEmitter {
 
   measure() {
     return new Promise((resolve) => {
+      this.emit('measure');
       wpi.pinMode(this.pin, OUTPUT);
       wpi.digitalWrite(this.pin, LOW);
 
       this.timer.setTimeout(() => {
-        let reading = 0;
-
         wpi.pinMode(this.pin, INPUT);
-
-        while (wpi.digitalRead(this.pin) === LOW) {
-          reading++;
-        }
-
-        resolve(reading);
+        resolve(this._getReading());
       }, '', '100m');
     });
   }
 
   measureSync() {
-    let reading = 0;
-
+    this.emit('measure');
     wpi.pinMode(this.pin, OUTPUT);
     wpi.digitalWrite(this.pin, LOW);
     wpi.delay(100);
     wpi.pinMode(this.pin, INPUT);
 
+    return this._getReading();
+  }
+
+  _getReading() {
+    let reading = 0;
+
     while (wpi.digitalRead(this.pin) === LOW) {
       reading++;
     }
 
+    this.emit('reading', reading);
     return reading;
   }
 }
-
-Photocell.defaults = {};
 
 export default Photocell;
