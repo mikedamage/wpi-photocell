@@ -30,7 +30,7 @@ export class Photocell extends EventEmitter {
    * Measure light level asynchronously.
    * @fires Photocell#measure
    * @fires Photocell#reading
-   * @returns {Promise.<number>} A promise that resolves to the number of loop iterations it took to fill the capacitor
+   * @returns {Promise.<number>} A promise that resolves to the amount of time it took to fill the capacitor (in microseconds)
    */
   measure() {
     return new Promise((resolve) => {
@@ -54,7 +54,7 @@ export class Photocell extends EventEmitter {
    * Measure light level synchronously
    * @fires Photocell#measure
    * @fires Photocell#reading
-   * @returns {number} The number of loop iterations it took to fill the capacitor
+   * @returns {number} The amount of time it took to fill the capacitor (in microseconds)
    */
   measureSync() {
     this.emit('measure');
