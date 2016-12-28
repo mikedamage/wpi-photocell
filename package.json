@@ -1,0 +1,34 @@
+{
+  "name": "wpi-photocell",
+  "version": "0.1.0",
+  "description": "WiringPi-Node library for reading analog photoresistors",
+  "author": "Mike Green <mike.is.green@gmail.com>",
+  "main": "dist/lib/photocell.js",
+  "dependencies": {
+    "lodash": "^4.17.3",
+    "nanotimer": "^0.3.14",
+    "wiring-pi": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-preset-es2015-node": "^6.1.1",
+    "jsdoc-to-markdown": "^2.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikedamage/wpi-photocell.git"
+  },
+  "scripts": {
+    "build": "babel --out-dir dist es6",
+    "doc": "jsdoc2md es6/lib/*.js > doc/api.md",
+    "prepublish": "npm run build",
+    "clean": "rm -rf ./dist"
+  },
+  "keywords": [
+    "wiring-pi",
+    "photocell",
+    "photoresistor",
+    "raspi"
+  ]
+}
