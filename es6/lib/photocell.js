@@ -28,7 +28,7 @@ export class Photocell extends EventEmitter {
         }
 
         resolve(reading);
-      }, '100m');
+      }, '', '100m');
     });
   }
 
