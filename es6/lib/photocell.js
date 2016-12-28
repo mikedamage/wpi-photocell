@@ -1,3 +1,4 @@
+import _                           from 'lodash';
 import wpi, { INPUT, OUTPUT, LOW } from 'wiring-pi';
 import EventEmitter                from 'events';
 import NanoTimer                   from 'nanotimer';
@@ -14,11 +15,13 @@ export class Photocell extends EventEmitter {
    * @param {number} pin - The GPIO pin number on the Raspberry Pi
    * @returns {Object} an instance of `Photocell`
    */
-  constructor(pin) {
+  constructor(pin, options = {}) {
     super();
 
-    this.pin   = pin;
-    this.timer = new NanoTimer();
+    this.pin          = pin;
+    this.delayTimer   = new NanoTimer();
+    this.measureTimer = new NanoTimer();
+    this.options      = _.assign({}, Photocell.defaults, options);
 
     wpi.setup('gpio');
   }
@@ -40,7 +43,7 @@ export class Photocell extends EventEmitter {
       wpi.pinMode(this.pin, OUTPUT);
       wpi.digitalWrite(this.pin, LOW);
 
-      this.timer.setTimeout(() => {
+      this.delayTimer.setTimeout(() => {
         wpi.pinMode(this.pin, INPUT);
         resolve(this._getReading());
       }, '', '100m');
@@ -64,11 +67,15 @@ export class Photocell extends EventEmitter {
   }
 
   _getReading() {
-    let reading = 0;
+    let reading = this.measureTimer.time(() => {
+      let loopCount = 0;
 
-    while (wpi.digitalRead(this.pin) === LOW) {
-      reading++;
-    }
+      while (wpi.digitalRead(this.pin) === LOW) {
+        loopCount++;
+      }
+
+      return loopCount;
+    }, '', this.options.units);
 
     /**
      * Fires when a measurement has completed and a reading is ready
@@ -79,5 +86,9 @@ export class Photocell extends EventEmitter {
     return reading;
   }
 }
+
+Photocell.defaults = {
+  units: 'u'
+};
 
 export default Photocell;
