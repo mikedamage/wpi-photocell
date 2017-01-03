@@ -39,7 +39,7 @@ sensor.measure().then((result) => {
 The `Photocell` class also fires events that you can subscribe to:
 
 ```js
-sensor.on('reading', (result) => console.log(reading));
+sensor.on('reading', (result) => console.log(result));
 sensor.measure();
 // => 425.33
 ```
